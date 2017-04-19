@@ -1,7 +1,11 @@
 package com.hc.baselibrary.ioc;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.View;
+import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -71,9 +75,10 @@ public class ViewUtils {
                     for (int viewid : viewIds){
                         //findViewById找到view
                         View view = viewFinder.findViewById(viewid);
+                        boolean isCheckNet = method.getAnnotation(CheckNet.class) != null;
                         if(view != null){
                             //view.setOnclickListentener
-                            view.setOnClickListener(new DeclaredOnClickListener(method,object));
+                            view.setOnClickListener(new DeclaredOnClickListener(method,object,isCheckNet));
                         }
                     }
                 }
@@ -85,14 +90,22 @@ public class ViewUtils {
 
         private Method mMethod;
         private Object mObject;
+        private boolean isCheckNet;
 
-        public DeclaredOnClickListener(Method method, Object object) {
+        public DeclaredOnClickListener(Method method, Object object, boolean isCheckNet) {
             this.mMethod = method;
             this.mObject = object;
+            this.isCheckNet = isCheckNet;
         }
 
         @Override
         public void onClick(View v) {
+            if(isCheckNet){
+                if(!networkAvailable(v.getContext())){
+                    Toast.makeText(v.getContext(),"请检查网络连接",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
             try {
                 //反射执行方法
                 mMethod.setAccessible(true);
@@ -106,5 +119,18 @@ public class ViewUtils {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static boolean networkAvailable(Context context){
+        try{
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetWork = connectivityManager.getActiveNetworkInfo();
+            if(activeNetWork != null && activeNetWork.isConnected()){
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
 }
