@@ -1,18 +1,19 @@
 package com.hc.essayjoke.joke;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.framelibrary.BaseSkinActivity;
 import com.hc.baselibrary.ioc.CheckNet;
 import com.hc.baselibrary.ioc.OnClick;
 import com.hc.baselibrary.ioc.ViewById;
-import com.hc.baselibrary.ioc.ViewUtils;
 
-public class MainActivity extends AppCompatActivity {
+import AsyncTask.NetAsyncTask;
+
+public class MainActivity extends BaseSkinActivity {
 
     @ViewById(R.id.main_text)
     private TextView textView;
@@ -20,36 +21,46 @@ public class MainActivity extends AppCompatActivity {
     @ViewById(R.id.main_image)
     private ImageView imageView;
 
+    @ViewById(R.id.update_button)
+    private Button mUpdateButton;
+
+    @ViewById(R.id.main_progress)
+    private ProgressBar mProgressBar;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void setContentView() {
         setContentView(R.layout.activity_main);
-        ViewUtils.inject(this);
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initView() {
         textView.setText("IOC ...");
+    }
 
-        AsyncTask asyncTask = new AsyncTask() {
+    @Override
+    protected void initTitle() {
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
+    }
 
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                return null;
-            }
-        };
+    @OnClick(R.id.update_button)
+    private void onClick(){
+        NetAsyncTask asyncTask = new NetAsyncTask(textView, mProgressBar);
+        asyncTask.execute(1000);
     }
 
     @OnClick(R.id.main_image)
     @CheckNet
     private void onClick(ImageView view) {
-        Toast.makeText(this, "图片点击事件", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "图片点击事件，", Toast.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.main_text)
     private void onClick(TextView textView) {
         Toast.makeText(this, "文字点击事件", Toast.LENGTH_LONG).show();
     }
-
 }
