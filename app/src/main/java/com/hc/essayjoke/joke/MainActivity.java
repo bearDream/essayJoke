@@ -1,5 +1,6 @@
 package com.hc.essayjoke.joke;
 
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -34,7 +35,7 @@ public class MainActivity extends BaseSkinActivity {
 
     @Override
     protected void initData() {
-
+        int i = 2/0;
     }
 
     @Override
