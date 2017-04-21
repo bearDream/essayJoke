@@ -29,5 +29,5 @@
         android:id="@+id/update_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="点击更新" />
+        android:text="点击跳转" />
 </LinearLayout>

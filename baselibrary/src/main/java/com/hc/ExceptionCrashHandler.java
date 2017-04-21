@@ -125,7 +125,7 @@ public class ExceptionCrashHandler implements Thread.UncaughtExceptionHandler {
             }
 
         }
-        return "";
+        return fileName;
     }
 
     //格式化日期
