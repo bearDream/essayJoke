@@ -20,6 +20,9 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Log.d("onCreate","初始化application");
+
+        //读取崩溃日志
+
         ExceptionCrashHandler.getInstance().init(this);
 
         //获取版本号以及补丁包

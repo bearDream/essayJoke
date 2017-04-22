@@ -20,7 +20,7 @@ public class TestActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(TestActivity.this,"修复成功",Toast.LENGTH_SHORT).show();
+                Toast.makeText(TestActivity.this,2 / 0+"修复成功",Toast.LENGTH_SHORT).show();
             }
         });
     }

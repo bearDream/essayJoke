@@ -51,7 +51,7 @@ public class FixDexManager {
 
         File destFile = new File(mDexDir,srcFile.getName());
         if (destFile.exists()){
-            Log.d(TAG,"patch["+fixFile+"has be loaded");
+            Log.d(TAG,"patch[ "+fixFile+" ]has be loaded");
             return;
         }
         copyFile(srcFile,destFile);
@@ -88,7 +88,7 @@ public class FixDexManager {
         Object pathList = pathListField.get(classLoader);
 
         //再获取pathList的dexElements
-        Field dexElementsField = pathList .getClass().getField("dexElements");
+        Field dexElementsField = pathList .getClass().getDeclaredField("dexElements");
         dexElementsField.setAccessible(true);
 
         dexElementsField.set(pathList, dexElement);
@@ -146,7 +146,7 @@ public class FixDexManager {
         Object pathList = pathListField.get(classLoader);
 
         //再获取pathList的dexElements
-        Field dexElementsField = pathList .getClass().getField("dexElements");
+        Field dexElementsField = pathList .getClass().getDeclaredField("dexElements");
         dexElementsField.setAccessible(true);
         return dexElementsField.get(pathList);
     }

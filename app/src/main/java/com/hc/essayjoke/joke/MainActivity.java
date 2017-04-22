@@ -1,6 +1,9 @@
 package com.hc.essayjoke.joke;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -52,25 +55,10 @@ public class MainActivity extends BaseSkinActivity {
     @Override
     protected void initData() {
         //将上次应用崩溃的信息上传至服务器
-        crashGet();
+//        crashGet();
         //使用ali提供的热修复技术
 //        aliFix();
-        fixDexBug();
-    }
-
-    //自己实现的热修复方式
-    private void fixDexBug() {
-        try {
-            File fixFile = new File(Environment.getExternalStorageDirectory(),"fix.dex");
-            if (fixFile.exists()){
-                FixDexManager fixDexManager = new FixDexManager(this);
-                fixDexManager.fixDex(fixFile.getAbsolutePath());
-                Toast.makeText(this,"修复成功",Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            Toast.makeText(this,"修复失败",Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
+//        fixDexBug();
     }
 
     @Override
@@ -106,6 +94,28 @@ public class MainActivity extends BaseSkinActivity {
         Toast.makeText(this, "文字点击事件", Toast.LENGTH_LONG).show();
     }
 
+    @OnClick(R.id.update_button)
+    private void onClick(Button v){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("测试一哈")
+                .setIcon(R.mipmap.ic_launcher)
+                .setMessage("this is a dialog")
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MainActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
+        AlertDialog alertDialog = builder.create();
+    }
+
     //ali提供的热修复技术
     private void aliFix(){
         //加载补丁包
@@ -120,7 +130,21 @@ public class MainActivity extends BaseSkinActivity {
             }
         }
     }
-
+    //自己实现的热修复方式
+    private void fixDexBug() {
+        try {
+            File fixFile = new File(Environment.getExternalStorageDirectory(),"fix.dex");
+            if (fixFile.exists()){
+                FixDexManager fixDexManager = new FixDexManager(this);
+                fixDexManager.fixDex(fixFile.getAbsolutePath());
+                Toast.makeText(this,"修复成功",Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this,"修复失败",Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+    //获取上次应用的崩溃日志
     private void crashGet(){
         File crashFile = ExceptionCrashHandler.getInstance().getCrashFile();
         if(crashFile.exists()){
