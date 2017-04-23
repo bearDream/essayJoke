@@ -1,9 +1,11 @@
 package com.hc.navigationBar;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * Created by soft01 on 2017/4/23.
@@ -12,22 +14,45 @@ import android.view.ViewGroup;
  * Description:导航栏的基类
  */
 
-public class AbsNavigationBar implements INavigationBar{
+public class AbsNavigationBar<P extends AbsNavigationBar.Builder.AbsNavigationParams> implements INavigationBar{
 
-    private Builder.AbsNavigationParams mParams;
+    private P mParams;
 
-    public AbsNavigationBar (Builder.AbsNavigationParams params){
+    private View mNavigationView;
+
+    public AbsNavigationBar (P params){
         this.mParams = params;
         createAndBindView();
+    }
+
+    public P getParams() {
+        return mParams;
+    }
+
+    protected void setText(int viewId, String text) {
+        TextView tv = findViewById(viewId);
+        if(!TextUtils.isEmpty(text)){
+            tv.setVisibility(View.VISIBLE);
+            tv.setText(text);
+        }
+    }
+
+    protected void setOnClickListener(int viewId, View.OnClickListener listener){
+        findViewById(viewId).setOnClickListener(listener);
+    }
+
+
+    public <T extends View> T findViewById(int viewId){
+        return (T) mNavigationView.findViewById(viewId);
     }
 
     //绑定和创建View
     private void createAndBindView() {
         //创建view
-        View navigationView = LayoutInflater.from(mParams.mContext)
+        mNavigationView = LayoutInflater.from(mParams.mContext)
                 .inflate(bindLayoutId(), mParams.mParent,false);
         //添加
-        mParams.mParent.addView(navigationView, 0);
+        mParams.mParent.addView(mNavigationView, 0);
 
         //绑定
         applyView();
@@ -56,8 +81,8 @@ public class AbsNavigationBar implements INavigationBar{
 
         public static class AbsNavigationParams {
 
-            private Context mContext;
-            private ViewGroup mParent;
+            protected Context mContext;
+            protected ViewGroup mParent;
 
             public AbsNavigationParams(Context context, ViewGroup parent){
                 this.mContext = context;

@@ -75,6 +75,14 @@ public class MainActivity extends BaseSkinActivity {
     protected void initTitle() {
         DefaultNavigationBar navigationBar = new DefaultNavigationBar
                 .Builder(this,(ViewGroup) findViewById(R.id.main_acitvity))
+                .setTitle("编辑")
+                .setRightText("投稿")
+                .setRightClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(MainActivity.this, "投稿啦！", Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .builder();
     }
 
