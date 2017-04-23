@@ -1,26 +1,22 @@
 package com.hc.essayjoke.joke;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alipay.euler.andfix.patch.PatchManager;
 import com.example.administrator.framelibrary.BaseSkinActivity;
 import com.hc.ExceptionCrashHandler;
 import com.hc.baselibrary.ioc.CheckNet;
 import com.hc.baselibrary.ioc.OnClick;
 import com.hc.baselibrary.ioc.ViewById;
+import com.hc.dialog.AlertDialog;
 import com.hc.fixBug.FixDexManager;
 
 import java.io.File;
@@ -32,6 +28,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import AsyncTask.NetAsyncTask;
+import navigationBar.DefaultNavigationBar;
 
 public class MainActivity extends BaseSkinActivity {
 
@@ -75,7 +72,11 @@ public class MainActivity extends BaseSkinActivity {
     }
 
     @Override
-    protected void initTitle() {}
+    protected void initTitle() {
+        DefaultNavigationBar navigationBar = new DefaultNavigationBar
+                .Builder(this,(ViewGroup) findViewById(R.id.main_acitvity))
+                .builder();
+    }
 
 //    @OnClick(R.id.update_button)
 //    private void onClick(){
@@ -95,25 +96,29 @@ public class MainActivity extends BaseSkinActivity {
     }
 
     @OnClick(R.id.update_button)
-    private void onClick(Button v){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("测试一哈")
-                .setIcon(R.mipmap.ic_launcher)
-                .setMessage("this is a dialog")
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        MainActivity.this.finish();
-                    }
-                })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
+    private void onClick(final Button v){
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setContentView(R.layout.detail_comment_dialog)
+                .setText(R.id.submit_button,"接受")
+                .fromBottom(true)
+                .fullWidth()
                 .show();
-        AlertDialog alertDialog = builder.create();
+
+        final EditText ed = dialog.getViews(R.id.comment_text);
+
+        dialog.setOnClickListenter(R.id.submit_button, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, ed.getText().toString().trim(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.setOnClickListenter(R.id.weibo_image,new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, "点击了微博分享", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //ali提供的热修复技术
