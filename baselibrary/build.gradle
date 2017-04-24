@@ -29,4 +29,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.alipay.euler:andfix:0.5.0@aar'
     testCompile 'junit:junit:4.12'
+    //网络
+    compile 'com.squareup.okhttp3:okhttp:3.7.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+
 }

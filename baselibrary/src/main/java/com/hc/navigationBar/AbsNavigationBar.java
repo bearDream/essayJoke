@@ -1,7 +1,9 @@
 package com.hc.navigationBar;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,8 @@ public class AbsNavigationBar<P extends AbsNavigationBar.Builder.AbsNavigationPa
         return mParams;
     }
 
+
+    //设置文本
     protected void setText(int viewId, String text) {
         TextView tv = findViewById(viewId);
         if(!TextUtils.isEmpty(text)){
@@ -37,6 +41,7 @@ public class AbsNavigationBar<P extends AbsNavigationBar.Builder.AbsNavigationPa
         }
     }
 
+    //设置点击事件
     protected void setOnClickListener(int viewId, View.OnClickListener listener){
         findViewById(viewId).setOnClickListener(listener);
     }
@@ -48,6 +53,19 @@ public class AbsNavigationBar<P extends AbsNavigationBar.Builder.AbsNavigationPa
 
     //绑定和创建View
     private void createAndBindView() {
+        //如果没有传viewId的话则需要自动去找他的根布局
+        if ( mParams.mParent == null){
+            //这样拿到的是自己定义的布局外面的那层布局
+            ViewGroup activityRoot = (ViewGroup) ((Activity)(mParams.mContext)).getWindow().getDecorView();
+            //获取了activity的根布局,然后用(ViewGroup) activityRoot.getChildAt(0)拿到了自己写的布局layout的第一个根布局
+//            ViewGroup activityRoot = (ViewGroup) ((Activity)(mParams.mContext)).findViewById(android.R.id.content);
+
+            mParams.mParent = (ViewGroup) activityRoot.getChildAt(0);
+            Log.d("TAG",mParams.mParent+"");
+        }
+
+        if (mParams.mParent == null)
+            return;
         //创建view
         mNavigationView = LayoutInflater.from(mParams.mContext)
                 .inflate(bindLayoutId(), mParams.mParent,false);

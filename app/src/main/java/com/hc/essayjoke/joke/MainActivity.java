@@ -18,16 +18,16 @@ import com.hc.baselibrary.ioc.OnClick;
 import com.hc.baselibrary.ioc.ViewById;
 import com.hc.dialog.AlertDialog;
 import com.hc.fixBug.FixDexManager;
+import com.hc.http.EnginCallBack;
+import com.hc.http.HttpUtils;
+import com.hc.http.OkHttpEngine;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import AsyncTask.NetAsyncTask;
 import navigationBar.DefaultNavigationBar;
 
 public class MainActivity extends BaseSkinActivity {
@@ -56,6 +56,20 @@ public class MainActivity extends BaseSkinActivity {
         //使用ali提供的热修复技术
 //        aliFix();
 //        fixDexBug();
+        HttpUtils.with(this).url("http://127.0.0.1:8080/get?user_id=1")
+                .get()
+                .execute(new EnginCallBack() {
+                    @Override
+                    public void onError(Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+                        Log.e("TAG",result);
+                    }
+                });
+
     }
 
     @Override
@@ -74,15 +88,9 @@ public class MainActivity extends BaseSkinActivity {
     @Override
     protected void initTitle() {
         DefaultNavigationBar navigationBar = new DefaultNavigationBar
-                .Builder(this,(ViewGroup) findViewById(R.id.main_acitvity))
-                .setTitle("编辑")
-                .setRightText("投稿")
-                .setRightClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(MainActivity.this, "投稿啦！", Toast.LENGTH_SHORT).show();
-                    }
-                })
+                .Builder(this)
+                .setTitle("首页")
+                .setRightText("我的")
                 .builder();
     }
 
